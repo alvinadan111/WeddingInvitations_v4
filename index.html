@@ -80,6 +80,17 @@
       document.addEventListener("DOMContentLoaded", function () {
         const video = document.querySelector(".invite-video");
 
+        // Force fullscreen when user clicks play
+        video.addEventListener("play", () => {
+          if (video.requestFullscreen) {
+            video.requestFullscreen();
+          } else if (video.webkitRequestFullscreen) {
+            video.webkitRequestFullscreen(); // Safari
+          } else if (video.msRequestFullscreen) {
+            video.msRequestFullscreen(); // IE/Edge
+          }
+        });
+
         if ("IntersectionObserver" in window) {
           const observer = new IntersectionObserver(
             (entries, observer) => {
