@@ -104,28 +104,6 @@
                     source.type = "video/mp4";
                     video.appendChild(source);
                     video.load();
-                    video.play().catch(() => {
-                      const playOnInteraction = () => {
-                        video.play();
-                        document.removeEventListener(
-                          "click",
-                          playOnInteraction
-                        );
-                        document.removeEventListener(
-                          "touchstart",
-                          playOnInteraction
-                        );
-                      };
-
-                      document.addEventListener("click", playOnInteraction, {
-                        once: true,
-                      });
-                      document.addEventListener(
-                        "touchstart",
-                        playOnInteraction,
-                        { once: true }
-                      );
-                    });
                     observer.unobserve(video);
                   }
                 }
