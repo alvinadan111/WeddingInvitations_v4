@@ -35,6 +35,15 @@
         margin: 0 auto;
       }
     </style>
+    <style>
+      .invite-video {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto 20px;
+        display: block;
+        background: #000;
+      }
+    </style>
   </head>
   <body>
     <img
@@ -55,5 +64,67 @@
       loading="lazy"
       decoding="async"
     />
+    <video
+      class="invite-video"
+      controls
+      preload="none"
+      playsinline
+      loop
+      controlslist="nodownload"
+      data-src="videoInvitation.mp4"
+    >
+      Your browser does not support the video tag.
+    </video>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const video = document.querySelector(".invite-video");
+
+        if ("IntersectionObserver" in window) {
+          const observer = new IntersectionObserver(
+            (entries, observer) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  const src = video.getAttribute("data-src");
+                  if (src) {
+                    const source = document.createElement("source");
+                    source.src = src;
+                    source.type = "video/mp4";
+                    video.appendChild(source);
+                    video.load();
+                    video.play().catch(() => {
+                      const playOnInteraction = () => {
+                        video.play();
+                        document.removeEventListener(
+                          "click",
+                          playOnInteraction
+                        );
+                        document.removeEventListener(
+                          "touchstart",
+                          playOnInteraction
+                        );
+                      };
+
+                      document.addEventListener("click", playOnInteraction, {
+                        once: true,
+                      });
+                      document.addEventListener(
+                        "touchstart",
+                        playOnInteraction,
+                        { once: true }
+                      );
+                    });
+                    observer.unobserve(video);
+                  }
+                }
+              });
+            },
+            { threshold: 0.25 }
+          );
+
+          observer.observe(video);
+        }
+      });
+    </script>
   </body>
 </html>
